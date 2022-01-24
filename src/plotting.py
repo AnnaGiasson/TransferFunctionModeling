@@ -4,6 +4,10 @@ from typing import Optional
 import numpy as np
 from matplotlib import pyplot as plt
 
+from . import PROJECT_DIR
+
+plt.style.use(PROJECT_DIR.joinpath("plot_formatting.mplstyle"))
+
 
 @dataclass
 class Series:
