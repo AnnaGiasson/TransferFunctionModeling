@@ -1,6 +1,3 @@
-#Author: Cameron Davidson-Pilon, original styles from Bayesian Methods for Hackers
-# https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/
-
 lines.linewidth : 2.0
 
 patch.linewidth: 0.5
@@ -9,25 +6,39 @@ patch.edgecolor: eeeeee
 patch.antialiased: True
 
 text.hinting_factor : 8
-text.color: .15
+text.color: whitesmoke
+font.family: sans-serif
 
 mathtext.fontset : cm
 
 figure.figsize: 12.8, 8.8
-figure.facecolor: dark_gray
+figure.facecolor: (0.169, 0.169, 0.141)
+figure.titleweight    : bold
+figure.titlesize      : 25
 
 axes.facecolor: eeeeee
 axes.edgecolor: bcbcbc
-axes.grid : True
 axes.titlesize: x-large
-axes.labelsize: large
 axes.prop_cycle: cycler('color', ['348ABD', 'A60628', '7A68A6', '467821', 'D55E00', 'CC79A7', '56B4E9', '009E73', 'F0E442', '0072B2'])
+axes.labelcolor: whitesmoke
+axes.labelsize        : 16  ## fontsize of the x any y labels
+axes.linewidth        : 3
 
 grid.color: b2b2b2
 grid.linestyle: --
-grid.linewidth: 0.5
+grid.linewidth: 0.8
+grid.alpha            : 0.8
+axes.grid             : True
+axes.grid.axis        : both
+axes.grid.which       : major
 
 legend.fancybox: True
+legend.facecolor: (0.169, 0.169, 0.141)
 
 xtick.direction: in
+xtick.color: whitesmoke
 ytick.direction: in
+ytick.color: whitesmoke
+
+
+savefig.facecolor: (0.169, 0.169, 0.141)

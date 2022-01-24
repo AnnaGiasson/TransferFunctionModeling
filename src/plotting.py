@@ -72,6 +72,7 @@ def multiseries_bodeplot(f: Series, *h: FrequencySeries, **options) -> None:
         "scatter": lambda i: axes[i].scatter,
     }
 
+    ylabels = ('Magnitude', 'Phase')
     units = (options.get("mag_unit", "dB"), options.get("phase_unit", "deg"))
 
     for i in (0, 1):
@@ -95,7 +96,7 @@ def multiseries_bodeplot(f: Series, *h: FrequencySeries, **options) -> None:
 
         ax.set(
             xlabel=f.label,
-            ylabel=options.get("ylabel", "") + f" ({units[i]})",
+            ylabel=ylabels[i] + f" ({units[i]})",
             xscale=options.get("xscale", "linear"),
         )
 
