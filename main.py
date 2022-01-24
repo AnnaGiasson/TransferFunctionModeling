@@ -70,6 +70,7 @@ model_n_zeros, model_n_poles = (3, 4)
 
 f_range_start: Tuple[int] = (0, 1, 2, 3, 4)  # 10^x
 f_range_end: Tuple[int] = (6, 7, 8)  # 10^x
+n_points: Tuple[int] = (201, 401, 801)  # base-10 log spaced
 
 # test loop
 for _ in range(n_tests):
@@ -78,7 +79,7 @@ for _ in range(n_tests):
     f_train = np.logspace(
         np.random.choice(f_range_start),
         np.random.choice(f_range_end),
-        401,
+        np.random.choice(n_points),
         base=10,
     )
     test_system = RandomSystem(n_zeros=system_n_zeros, n_poles=system_n_poles)
