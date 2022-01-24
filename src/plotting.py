@@ -4,12 +4,21 @@ from typing import Optional
 import numpy as np
 from matplotlib import pyplot as plt
 
-# plt.style.use('VicorPowerpointFormat')
-
 
 @dataclass
 class Series:
     data: np.ndarray
+    label: Optional[str] = None
+    ls: str = "-"
+    color: Optional[str] = None
+    plot_type: str = "plot"
+    alpha: float = 1.0
+
+
+@dataclass
+class FrequencySeries:
+    magnitude: np.ndarray
+    phase: np.ndarray
     label: Optional[str] = None
     ls: str = "-"
     color: Optional[str] = None
@@ -51,7 +60,7 @@ def multiseries_plot(x: Series, *y: Series, **options) -> None:
         print(f"Saved Figure: {options['file_path']}")
 
 
-def multiseries_bodeplot(f: Series, *h: Series, **options) -> None:
+def multiseries_bodeplot(f: Series, *h: FrequencySeries, **options) -> None:
 
     fig, axes = plt.subplots(2, 1, sharex=True)
     plot_functions = {
@@ -59,25 +68,10 @@ def multiseries_bodeplot(f: Series, *h: Series, **options) -> None:
         "scatter": lambda i: axes[i].scatter,
     }
 
-    magnitude_functions = {
-        "abs": lambda x: np.abs(x),
-        "db": lambda x: 20 * np.log10(np.abs(x)),
-    }
-    phase_functions = {
-        "rad": lambda x: np.angle(x),
-        "deg": lambda x: 180 / np.pi * np.angle(x),
-    }
-
     units = (options.get("mag_unit", "dB"), options.get("phase_unit", "deg"))
-
-    data_func = (
-        magnitude_functions[units[0].lower()],
-        phase_functions[units[1].lower()],
-    )
 
     for i in (0, 1):
         ax = axes[i]
-        func = data_func[i]
         for n, vector in enumerate(h):
             plot_func = plot_functions.get(
                 vector.plot_type, plot_functions["plot"]
@@ -85,7 +79,7 @@ def multiseries_bodeplot(f: Series, *h: Series, **options) -> None:
             color = f"C{n}" if vector.color is not None else vector.color
             plot_func(
                 f.data,
-                func(vector.data),
+                vector.magnitude if i == 0 else vector.phase,
                 label=vector.label,
                 ls=vector.ls,
                 color=color,
