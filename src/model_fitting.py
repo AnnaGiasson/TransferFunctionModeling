@@ -103,3 +103,7 @@ class SystemModel:
         w = 2 * np.pi * f
         _, sig = signal.freqs(*self.tf, worN=w)
         return sig
+
+    def measure(self, f: np.ndarray) -> np.ndarray:
+        """alias for self.predict. Included to follow the "System" Protocol"""
+        return self.predict(f)
