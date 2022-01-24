@@ -9,8 +9,12 @@ patch.edgecolor: eeeeee
 patch.antialiased: True
 
 text.hinting_factor : 8
+text.color: .15
 
 mathtext.fontset : cm
+
+figure.figsize: 12.8, 8.8
+figure.facecolor: dark_gray
 
 axes.facecolor: eeeeee
 axes.edgecolor: bcbcbc
