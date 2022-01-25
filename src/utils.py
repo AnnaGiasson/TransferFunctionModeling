@@ -1,6 +1,9 @@
-from typing import Tuple
+from pathlib import Path
+from typing import Optional, Tuple
 
 import numpy as np
+from tkinter.filedialog import askopenfile
+import re
 
 
 class Normalizer:
@@ -59,3 +62,64 @@ def phase(x: np.ndarray) -> np.ndarray:
 def phase_deg(x: np.ndarray) -> np.ndarray:
     """returns the phase of a complex vector in units of degrees"""
     return phase(x) * (180 / np.pi)
+
+
+def mag_phase_to_complex(magnitude: np.ndarray,
+                         phase: np.ndarray,
+                         mag_units='db', phase_units='deg') -> np.ndarray:
+
+    i = complex(0, 1)
+
+    # handle units
+    if mag_units.lower() == 'db':
+        mag = 10**(magnitude/20)
+    else:
+        mag = magnitude
+
+    if phase_units.lower() == 'deg':
+        ph = phase*(np.pi/180)
+    else:
+        ph = phase
+
+    return mag*np.cos(ph) + i*mag*np.sin(ph)
+
+
+def load_data(file_path: Optional[Path] = None
+              ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Loads frequency, magnitude, and phase data from a csv file.
+    If a file path is not passed as arguement the user will prompted to select
+    a file throught the built-in file explorer.
+
+    expected file format is:
+    frequency_data1,magnitude_data1,phase_data1\n
+    frequency_data2,magnitude_data2,phase_data2\n
+    ...
+    """
+
+    # read in data
+    if file_path is None:
+        with askopenfile(mode='r', filetypes=[('CSV', '*.csv')],
+                         defaultextension='csv') as file:
+            file_contents = file.read()
+    else:
+        with open(file_path, mode='r') as file:
+            file_contents = file.read()
+
+    # parse file for regex matches
+    signed_float = r'([+-]?\d*\.?\d*)'
+    pattern = re.compile(f"{','.join([signed_float]*3)}\n")
+    matches = re.findall(pattern, file_contents)
+
+    # pack data into arrays
+    f = np.zeros(len(matches))
+    mag = np.zeros_like(f)
+    phase = np.zeros_like(f)
+
+    for i, match in enumerate(matches):
+        data = tuple(map(float, match))
+        f[i] = data[0]
+        mag[i] = data[1]
+        phase[i] = data[2]
+
+    return f, mag, phase
