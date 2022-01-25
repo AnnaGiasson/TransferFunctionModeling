@@ -1,9 +1,9 @@
+import re
 from pathlib import Path
+from tkinter.filedialog import askopenfile
 from typing import Optional, Tuple
 
 import numpy as np
-from tkinter.filedialog import askopenfile
-import re
 
 
 class Normalizer:
@@ -64,28 +64,29 @@ def phase_deg(x: np.ndarray) -> np.ndarray:
     return phase(x) * (180 / np.pi)
 
 
-def mag_phase_to_complex(magnitude: np.ndarray,
-                         phase: np.ndarray,
-                         mag_units='db', phase_units='deg') -> np.ndarray:
+def mag_phase_to_complex(
+    magnitude: np.ndarray, phase: np.ndarray, mag_units="db", phase_units="deg"
+) -> np.ndarray:
 
     i = complex(0, 1)
 
     # handle units
-    if mag_units.lower() == 'db':
-        mag = 10**(magnitude/20)
+    if mag_units.lower() == "db":
+        mag = 10 ** (magnitude / 20)
     else:
         mag = magnitude
 
-    if phase_units.lower() == 'deg':
-        ph = phase*(np.pi/180)
+    if phase_units.lower() == "deg":
+        ph = phase * (np.pi / 180)
     else:
         ph = phase
 
-    return mag*np.cos(ph) + i*mag*np.sin(ph)
+    return mag * np.cos(ph) + i * mag * np.sin(ph)
 
 
-def load_data(file_path: Optional[Path] = None
-              ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def load_data(
+    file_path: Optional[Path] = None,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Loads frequency, magnitude, and phase data from a csv file.
     If a file path is not passed as arguement the user will prompted to select
@@ -99,15 +100,16 @@ def load_data(file_path: Optional[Path] = None
 
     # read in data
     if file_path is None:
-        with askopenfile(mode='r', filetypes=[('CSV', '*.csv')],
-                         defaultextension='csv') as file:
+        with askopenfile(
+            mode="r", filetypes=[("CSV", "*.csv")], defaultextension="csv"
+        ) as file:
             file_contents = file.read()
     else:
-        with open(file_path, mode='r') as file:
+        with open(file_path, mode="r") as file:
             file_contents = file.read()
 
     # parse file for regex matches
-    signed_float = r'([+-]?\d*\.?\d*)'
+    signed_float = r"([+-]?\d*\.?\d*)"
     pattern = re.compile(f"{','.join([signed_float]*3)}\n")
     matches = re.findall(pattern, file_contents)
 
